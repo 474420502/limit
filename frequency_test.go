@@ -7,12 +7,10 @@ import (
 )
 
 func TestCaseFreq(t *testing.T) {
-	freq := NewFrequencyLimit[Float64]()
-
-	for i := 0; i < 100; i++ {
-		time.Sleep(time.Second)
-		freq.Put(Float64(1))
-		log.Println(freq.GetFrequency())
+	freq := NewFrequencyLimit()
+	for i := 0; i < 1000; i++ {
+		freq.Put(0.001)
+		time.Sleep(time.Millisecond)
 	}
-
+	log.Println(freq.GetFrequency())
 }

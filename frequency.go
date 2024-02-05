@@ -18,15 +18,17 @@ type FrequencyLimit struct {
 	total        float64
 	countedUints List[*countingUnit]
 
-	minDuration time.Duration
+	countedMaxSize int
+	minDuration    time.Duration
 
 	lock sync.Mutex
 }
 
 func NewFrequencyLimit() *FrequencyLimit {
 	return &FrequencyLimit{
-		total:       0,
-		minDuration: time.Second * 4,
+		total:          0,
+		countedMaxSize: 128,
+		minDuration:    time.Second * 8,
 	}
 }
 
@@ -49,9 +51,9 @@ func (freq *FrequencyLimit) Put(counted float64) {
 	head := freq.countedUints.head
 
 	for tail != head {
-		if head.value.Time.Sub(tail.value.Time) >= freq.minDuration {
+		if freq.countedUints.size > freq.countedMaxSize || head.value.Time.Sub(tail.value.Time) >= freq.minDuration {
 			next := freq.countedUints.TruncateNodeNext(tail)
-			for _, v := range next.ToTailValues() {
+			for _, v := range next {
 				freq.total -= v.Counted
 			}
 			return

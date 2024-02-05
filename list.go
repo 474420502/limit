@@ -18,11 +18,14 @@ func (n *node[VALUE]) ToTailValues() (result []VALUE) {
 }
 
 type List[VALUE any] struct {
+	size int
 	head *node[VALUE]
 	tail *node[VALUE]
 }
 
 func (l *List[VALUE]) PutHead(value VALUE) {
+	l.size++
+
 	if l.head == nil {
 		l.head = &node[VALUE]{
 			value: value,
@@ -46,11 +49,15 @@ func (l *List[VALUE]) IsEmpty() bool {
 	return l.head == nil
 }
 
-func (l *List[VALUE]) TruncateNodeNext(n *node[VALUE]) *node[VALUE] {
+func (l *List[VALUE]) TruncateNodeNext(n *node[VALUE]) []VALUE {
 	next := n.next
 	n.next = nil
 	l.tail = n
-	return next
+
+	result := next.ToTailValues()
+	l.size -= len(result)
+
+	return result
 }
 
 // RemoveBack 不做空的判断处理
