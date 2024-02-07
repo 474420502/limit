@@ -27,6 +27,10 @@ func NewFrequencyLimit() *FrequencyLimit {
 }
 
 func (freq *FrequencyLimit) With(countedMaxSize int) {
+	if countedMaxSize < 1 {
+		panic("With(countedMaxSize) countedMaxSize must >= 1")
+	}
+
 	freq.countedMaxSize = countedMaxSize
 	for freq.countedUints.size > freq.countedMaxSize {
 		freq.total -= freq.countedUints.RemoveBack().Counted
