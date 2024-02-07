@@ -9,8 +9,9 @@ import (
 func TestCaseFreq(t *testing.T) {
 	freq := NewFrequencyLimit()
 	for i := 0; i < 1000; i++ {
-		freq.Put(0.001)
-		time.Sleep(time.Millisecond)
+		freq.Put(10)
+		time.Sleep(time.Second)
+		log.Println(freq.GetFrequency())
 	}
-	log.Println(freq.GetFrequency())
+
 }
