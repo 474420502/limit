@@ -50,6 +50,4 @@ func (tup *TimeLimit[T]) ExceedsLimit(v T, ExceedsLimitDo func() bool) {
 			delete(tup.dict, v)
 		})
 	}
-
-	return
 }
